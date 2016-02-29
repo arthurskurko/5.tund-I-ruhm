@@ -11,12 +11,12 @@
 	//[{"name":"romil"}]
 	
 	//?name=nimi&ingredients=koostis
-	if(isset($_GET["name"]) && isset($_GET["ingredients"])){
+	if(isset($_GET["title"]) && isset($_GET["ingredients"])){
 		//ei ole tühjad
-		if(!empty($_GET["name"]) && !empty($_GET["ingredients"])){
+		if(!empty($_GET["title"]) && !empty($_GET["ingredients"])){
 			//lihtne objekt
 			$object = new StdClass();
-			$object -> name = $_GET["name"];
+			$object -> title = $_GET["title"];
 			$object -> ingredients = $_GET["ingredients"];
 			
 			//lisan objekti massiivi

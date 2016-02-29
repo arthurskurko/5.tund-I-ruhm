@@ -76,26 +76,51 @@
        //saan kätte purgid localStorage kui on
        if(localStorage.jars){
            //võtan stringi ja teen tagasi objektideks
-           this.jars = JSON.parse(localStorage.jars);
-           console.log('laadisin localStorageist massiiivi ' + this.jars.length);
+           //this.jars = JSON.parse(localStorage.jars);
+           //console.log('laadisin localStorageist massiiivi ' + this.jars.length);
 
-           //tekitan loendi htmli
-           this.jars.forEach(function(jar){
+           this.createListFromArray(JSON.parse(localStorage.jars));
+		   console.log("laadisin localStorag'est");
 
-               var new_jar = new Jar(jar.title, jar.ingredients);
-
-               var li = new_jar.createHtmlElement();
-               document.querySelector('.list-of-jars').appendChild(li);
-
-           });
-
-       }
+       }else{
+		   //ei olnud olemas, teen serverisse päringu
+		   var xhttp = new XMLHttpRequest();
+		   xhttp.onreadystatechange = function(){
+			   console.log(xhttp.readyState);
+			   if(xhttp.readyState == 4 && xhttp.status == 200){
+				   //JSON-parse = string objektideks
+				   var result = JSON.parse(xhttp.responseText);
+				   console.log(result);
+				   
+				   //NB! saab viidata MOOSIPURGILE ka Moosipurk.instance
+				   
+				   Moosipurk.instance.createListFromArray(result);
+				   console.log("laadisin serverist");
+			   }
+		   };
+		   //päringu tegemine
+		   xhttp.open("GET", "saveData.php", true);
+		   xhttp.send();
+	   }
 
 
        // esimene loogika oleks see, et kuulame hiireklikki nupul
        this.bindEvents();
 
      },
+	 
+	 createListFromArray: function(arrayOfObjects){
+		this.jars = arrayOfObjects;
+		//tekitan loendi htmli
+		this.jars.forEach(function(jar){
+
+		   var new_jar = new Jar(jar.title, jar.ingredients);
+
+		   var li = new_jar.createHtmlElement();
+		   document.querySelector('.list-of-jars').appendChild(li);
+
+		});
+	 },
 
      bindEvents: function(){
        document.querySelector('.add-new-jar').addEventListener('click', this.addNewClick.bind(this));
