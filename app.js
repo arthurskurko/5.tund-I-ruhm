@@ -83,7 +83,7 @@
 		   console.log("laadisin localStorag'est");
 
        }else{
-		   //ei olnud olemas, teen serverisse päringu
+		   //ei olnud LocalStorage't olemas, teen serverisse päringu
 		   var xhttp = new XMLHttpRequest();
 		   xhttp.onreadystatechange = function(){
 			   console.log(xhttp.readyState);
@@ -103,10 +103,6 @@
 		   xhttp.send();
 	   }
 
-
-       // esimene loogika oleks see, et kuulame hiireklikki nupul
-       this.bindEvents();
-
      },
 	 
 	 createListFromArray: function(arrayOfObjects){
@@ -120,6 +116,9 @@
 		   document.querySelector('.list-of-jars').appendChild(li);
 
 		});
+		
+        // esimene loogika oleks see, et kuulame hiireklikki nupul
+        this.bindEvents();
 	 },
 
      bindEvents: function(){
@@ -175,6 +174,21 @@
        console.log(JSON.stringify(this.jars));
        // JSON'i stringina salvestan localStorage'isse
        localStorage.setItem('jars', JSON.stringify(this.jars));
+	   
+	   //salvestan serverisse
+	   var xhttp = new XMLHttpRequest();
+	   xhttp.onreadystatechange = function(){
+		   
+		   if(xhttp.readyState == 4 && xhttp.status == 200){
+			   
+			   console.log("salvestas serverist");
+			   
+		   }
+		   
+	   };
+	   console.log("saveData.php?title="+title+"&ingredients="+ingredients);
+	   xhttp.open("GET", "saveData.php?title="+title+"&ingredients="+ingredients, true);
+	   xhttp.send();
 
        // 2) lisan selle htmli listi juurde
        var li = new_jar.createHtmlElement();
